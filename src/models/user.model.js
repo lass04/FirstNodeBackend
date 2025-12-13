@@ -23,6 +23,7 @@ const userSchema = new Schema(
           type:String,
           required: true,
           unique: true,
+          lowercase: true,
           maxlength: 30,
           minlength: 13,
           trim: true
