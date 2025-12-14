@@ -35,6 +35,41 @@ const registerUser = async (req,res) => {
     }
 }
 
+const loginUser = async (req, res) => {
+    
+    try{
+    const { email, password } = req.body;
+    
+    const user = await User.findOne({
+        email:email.toLowerCase()
+    });
+
+    if(!user){
+        return res.status(400).json({ message: "User Not found "});
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if(!isMatch){
+        return res.status(400).json({
+            message : "Invalid credentials"
+        });
+    }
+
+    res.status(200).json({
+        message: "Logged in succesfully ",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+    })
+
+     }catch(error){
+        return res.status(500).json({message: "Server Inernal Error",error:error.message});
+     }
+}
+
 export {
-    registerUser
+    registerUser,
+    loginUser
 }
