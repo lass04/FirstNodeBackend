@@ -60,7 +60,7 @@ const loginUser = async (req, res) => {
         user: {
             id: user._id,
             username: user.username,
-            email: user.email
+            email: user.email,
         }
     })
 
@@ -69,7 +69,28 @@ const loginUser = async (req, res) => {
      }
 }
 
+const logoutUser = async (req,res) => {
+
+     try{
+        const { email } = req.body;
+
+        const findUser = await User.findOne({email:email.toLowerCase()});
+        if(!findUser)
+            return res.status(404).json({message: "User not found"});
+
+        res.status(200).json({message: "Logged out successfully"});
+
+     }catch(error){
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        })
+     }
+     
+}
+
 export {
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 }
