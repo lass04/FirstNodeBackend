@@ -50,7 +50,33 @@ const getPosts = async (req,res) => {
     }
 }
 
+const updatePost = async (req,res) => {
+
+    try{
+    
+        if(Object.keys(req).length === 0) 
+            return res.status(400).json({message: "No data provided"});
+    
+        const findPost = await Post.findByIdAndUpdate(req.params.id,req.body,{new:true});
+        if(!findPost)
+            return res.status(400).json({message: "Post not found"});
+
+        res.status(200).json({
+            message:"Post updated successfully",
+            findPost
+        })
+        
+
+    }catch(error){
+        return res.status(500).json({
+            message:"Internal Server error",
+            error:error.message
+        })
+    }
+}
+
 export {
     createPost,
-    getPosts
+    getPosts,
+    updatePost
 }
